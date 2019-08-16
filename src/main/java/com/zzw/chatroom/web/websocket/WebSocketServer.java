@@ -1,13 +1,17 @@
 package com.zzw.chatroom.web.websocket;
 
+import com.zzw.chatroom.bean.MsgInfo;
+import com.zzw.chatroom.service.IMsgInfoService;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.HashMap;
+import java.sql.Timestamp;
+import java.util.concurrent.ConcurrentHashMap;
 
-@ServerEndpoint("/ws")
+@ServerEndpoint(value = "/ws")
 @Component
 public class WebSocketServer {
 
@@ -19,11 +23,16 @@ public class WebSocketServer {
     private static long onlineCount = 0;
     private static long autoIncrement = 0;
 
-    private static HashMap<Long, WebSocketServer> users = new HashMap<>();
-
-    private Session session;
+    private static ConcurrentHashMap<Long, WebSocketServer> users = new ConcurrentHashMap<>();
 
     private long uid;
+    private Session session;
+
+    private static ApplicationContext applicationContext;
+
+    public static void setApplicationContext(ApplicationContext context) {
+        applicationContext = context;
+    }
 
     @OnOpen
     public void onOpen(Session session) throws IOException {
@@ -76,6 +85,14 @@ public class WebSocketServer {
                 }
             }
         }
+        //缓存消息
+        IMsgInfoService msgInfoService = applicationContext.getBean(IMsgInfoService.class);
+        MsgInfo msgInfo = new MsgInfo();
+        msgInfo.setUserId((int) uid);
+        msgInfo.setContent(msg);
+        msgInfo.setType(sign);
+        msgInfo.setCreateTime(new Timestamp(System.currentTimeMillis()));
+        msgInfoService.save(msgInfo);
     }
 
     private void sendMsg(String msg) throws IOException {
