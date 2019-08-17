@@ -10,7 +10,10 @@
     </insert>
 
     <select id="listRecentMsgOrderByCreateTimeDesc" resultType="MsgInfo">
-        select * from msg_info order by create_time desc limit ${offset},${limit}
+        select *
+        from msg_info
+        order by create_time desc
+        limit ${offset},${limit}
     </select>
 
 </mapper>

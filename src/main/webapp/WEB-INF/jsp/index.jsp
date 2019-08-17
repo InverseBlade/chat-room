@@ -410,6 +410,19 @@
         }
     }
 
+    function pullMsg(callback) {
+        $.get('/pullMsg', function (res, code) {
+            for (var i = 0; i < res.length; i++) {
+                if (res[i]['type'] == 'MESSAGE') {
+                    appendMessage(res[i]['type'] + '\r\n' + res[i]['userId'] + '\r\n' + res[i]['content']);
+                } else {
+                    appendMessage(res[i]['content']);
+                }
+            }
+            if (callback) callback();
+        });
+    }
+
     //WebSocket
     var ws = null;
     var first_connect = true;
@@ -420,7 +433,9 @@
             ws = new WebSocket("ws://${pageContext.request.serverName}:${pageContext.request.serverPort}/ws");
             //建立成功建立的回调方法
             ws.onopen = function (event) {
-                appendMessage("您已进入聊天室");
+                pullMsg(function () {
+                    appendMessage("您已进入聊天室");
+                });
             };
             //接收到消息的回调方法
             ws.onmessage = function (event) {

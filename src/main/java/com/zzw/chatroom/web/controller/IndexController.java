@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -27,8 +28,11 @@ public class IndexController {
     @RequestMapping("/pullMsg")
     @ResponseBody
     public List<MsgInfo> listMsg(@RequestParam(defaultValue = "1") Integer page,
-                                 @RequestParam(defaultValue = "30") Integer size) {
-        return msgInfoService.listMsgRecord(page, size);
+                                 @RequestParam(defaultValue = "100") Integer size) {
+        List<MsgInfo> msgInfos = msgInfoService.listMsgRecord(page, size);
+        //按时间从前到后排序
+        Collections.reverse(msgInfos);
+        return msgInfos;
     }
 
     @RequestMapping("/test")

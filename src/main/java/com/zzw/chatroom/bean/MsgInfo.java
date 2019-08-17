@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 public class MsgInfo {
 
-    private Integer MsgId;
+    private Integer msgId;
 
     private Integer userId;
 
@@ -18,19 +18,19 @@ public class MsgInfo {
     }
 
     public MsgInfo(Integer msgId, Integer userId, String content, String type, Timestamp createTime) {
-        MsgId = msgId;
+        msgId = msgId;
         this.userId = userId;
         this.content = content;
         this.type = type;
         this.createTime = createTime;
     }
 
-    public Integer getMsgId() {
-        return MsgId;
+    public Integer getmsgId() {
+        return msgId;
     }
 
-    public void setMsgId(Integer msgId) {
-        MsgId = msgId;
+    public void setmsgId(Integer msgId) {
+        msgId = msgId;
     }
 
     public Integer getUserId() {
@@ -68,7 +68,7 @@ public class MsgInfo {
     @Override
     public String toString() {
         return "MsgInfo{" +
-                "MsgId=" + MsgId +
+                "msgId=" + msgId +
                 ", userId=" + userId +
                 ", content='" + content + '\'' +
                 ", type='" + type + '\'' +
